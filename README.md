@@ -1,2 +1,3 @@
 # Materials for `intro to R programming`
-SW
+[intro_to_R.nb.html](intro_to_R.nb.html)
+
