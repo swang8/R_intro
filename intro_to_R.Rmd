@@ -1,0 +1,567 @@
+---
+title: "Introduction to R"
+author: "Dr. Shichen Wang, TAMU"
+output:
+  html_document:
+    df_print: paged
+---
+<hr>
+Install required packages:
+```{r}
+if("ggplot2" %in% rownames(installed.packages()) == FALSE){install.packages("ggplot2")}
+if("gapminder" %in% rownames(installed.packages()) == FALSE){install.packages("gapminder")}
+```
+##  Basic calculation
+Addition: `+`
+
+Subtraction: `-`
+
+Multiplication: `*`
+
+Division: `/`
+
+Exponentiation: `^`
+
+Modulo: `%%`
+
+```{r}
+25 + 5
+6 - 10
+45 * 6
+90 / 5
+2^5
+8 %% 6
+```
+
+## Math
+`sqrt` ,`sin`, `exp` et al 
+
+```{r}
+print(sqrt(100))
+
+print(sin(90))
+
+print(exp(10))
+```
+
+## Variables;
+A basic concept in programming is called `variable`. In R, A variable allow you store some value or an object.
+
+We use `<-` or `=` to assign value to a variable.
+
+```{r}
+# assign 10 to a variable called apple
+apple = 10
+print(apple)
+
+# assign 20 to a variable called berry
+berry <- 20
+print(berry)
+
+# print the sum of apple and berry
+print(apple + berry)
+
+```
+
+```{r}
+berry = "twenty"
+print (apple + berry)
+```
+Different types of variables:
+1. numeric, 90.79
+2. integers, 1,2,3,..
+3. logical, True/False
+4. characgters, text/string
+
+```{r}
+my_num = 123
+my_character = "a"
+my_logical = TRUE
+
+# check my_num
+class(my_num)
+class(my_character)
+class(my_logical)
+```
+
+## Vectors: collection of data. In R, we can create a vector using the combine function `c()`.
+
+```{r}
+# numeric vector
+temp_this_week = c(90, 89, 78, 67, 60, 65, 76)
+
+# character vector
+abc = c("a", "b", "c")
+
+# logical vecgor
+rained_this_week = c(TRUE, FALSE, F, T, T, F, F)
+
+```
+
+What will happen if mix different types of values? say ` mixed = c("a", "b", 1, 2) `
+```{r}
+mixed = c("a", "b", 1, 2)
+print(mixed)
+print(class(mixed))
+```
+We saw `numeric` being converted to `character`, what if we mix  `numeric` and `logical` ?
+
+```{r}
+mixed = c( 0, 1, 2, TRUE, FALSE)
+print(mixed)
+```
+
+It is **not** recommended to mix different types in a vector.
+
+```{r}
+# vector excercise
+a_vec = c(1, 2, 3)
+b_vec = c(3, 2, 1)
+
+print(a_vec + b_vec)
+
+a_doubled = 2 * a_vec
+print(a_doubled)
+
+```
+
+```{r}
+# vector selection
+x = 1:10
+print(x)
+
+# the first value of the vector
+print(x[1])
+
+# change the first value 
+x[1] = 99
+
+print(x)
+
+```
+
+```{r}
+# vector selection, multiple values
+x = 1:10
+x = 2*x
+
+# select values from index 1 to 5
+print(x[1:5])
+print(x[c(1,2,3,4,5)])
+
+# select all values except index 5
+print(x[-5])
+
+# select all values except index 5 and 8
+print(x[c(-5, -8)])
+
+```
+
+**Question**: how to select values that are > 15 from the vector `x`?
+
+```{r}
+larger_15 = x[x>15]
+print (larger_15)
+```
+
+The (logical) comparison operators known to R are:
+
+`<` for less than
+`>` for greater than
+`<=` for less than or equal to
+`>=` for greater than or equal to
+`==` for equal to each other
+`!=` not equal to each other
+
+```{r}
+
+print (10 > 15)
+
+print(x)
+
+print(x >= 10)
+
+```
+
+## Matrix
+A matrix is a collection of elements of the same data type arranged into a fixed number of rows and columns. It is two-dimensional.
+
+Construct a matrix in R with the command `matrix()`
+```{r}
+my_matrix = matrix(1:12, byrow=T, nrow=4)
+print(my_matrix)
+```
+
+Construct a matrix to store the fruit price:
+```{r}
+stores = c("Kroger", "HEB", "Walmart")
+apple_prices = c(3.4, 2.9, 1.6)
+orange_prices = c(1.7, 2.2, 2.5)
+
+fruit_price = matrix(c(apple_prices, orange_prices), byrow = T, nrow=2)
+print(fruit_price)
+
+# name the columns and rows
+rownames(fruit_price) = c("apple", "orange")
+colnames(fruit_price) = stores
+
+print(fruit_price)
+
+```
+
+use `cbind` or `rbind` to add data to a matrix or combine two matrices
+```{r}
+# new fruit
+banana = c(0.56, 0.59, 0.45)
+
+new_fruit = rbind(fruit_price, banana)
+
+print(new_fruit)
+
+```
+
+Similar to vectors, you can use the square brackets `[ ]` to select one or multiple elements from a matrix. 
+
+For example:
+
+`my_matrix[1, 1]` selects the element at the first row and first column.
+`my_matrix[1:3, 2:4]` results in a matrix with the data on the rows 1, 2, 3 and columns 2, 3, 4.
+
+Similar to what you have learned with vectors, the standard operators like `+`, `-`, `/`, `*`, etc. work in an element-wise way on matrices in R.
+
+**Lots of matrix algebra functions in R.**
+
+## data frame
+What's a data frame?
+
+You may remember from the chapter about matrices that all the elements that you put in a matrix should be of the same type. 
+
+When doing a market research survey, however, you often have questions such as:
+
+'Are you married?' or 'yes/no' questions (logical)
+'How old are you?' (numeric)
+'What is your opinion on this product?' or other 'open-ended' questions (character)
+...
+The output, namely the respondents' answers to the questions formulated above, is a data set of different data types. You will often find yourself working with data sets that contain different data types instead of only one.
+
+A **data frame** has the variables of a data set as columns and the observations as rows. 
+
+```{r}
+head(mtcars)
+```
+
+```{r}
+tail(mtcars)
+```
+
+
+```{r}
+str(mtcars)
+```
+
+Creat a data frame using the function `data.frame`
+```{r}
+# Definition of vectors
+name <- c("Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune")
+type <- c("Terrestrial planet", "Terrestrial planet", "Terrestrial planet", 
+          "Terrestrial planet", "Gas giant", "Gas giant", "Gas giant", "Gas giant")
+diameter <- c(0.382, 0.949, 1, 0.532, 11.209, 9.449, 4.007, 3.883)
+rotation <- c(58.64, -243.02, 1, 1.03, 0.41, 0.43, -0.72, 0.67)
+rings <- c(FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE, TRUE)
+
+# Create a data frame from the vectors
+planets_df <- data.frame(Name = name, Type = type, Diameter = diameter, Rotation = rotation, Rings = rings)
+
+print(head(planets_df))
+```
+
+```{r}
+str(planets_df)
+```
+
+Selection of data frame elements
+
+Similar to vectors and matrices, you select elements from a data frame with the help of square brackets `[ ]`. By using a comma, you can indicate what to select from the rows and the columns respectively. 
+
+For example:
+
+`my_df[1,2]` selects the value at the first row and second column in my_df.
+`my_df[1:3, 2:4]` selects rows 1, 2, 3 and columns 2, 3, 4 in my_df.
+Sometimes you want to select all elements of a row or column. For example, `my_df[1, ]` selects all elements of the first row.
+
+```{r}
+# get the diameter of Earth
+earth_diameter1 = planets_df[3, c(1, 3)]
+earth_diameter2 = planets_df[3, c("Name", "Diameter")]
+
+print(earth_diameter1)
+
+print(earth_diameter2)
+
+```
+
+
+## Lists, a more flexible data frame
+
+A list in R is similar to your to-do list at work or school: the different items on that list most likely differ in length, characteristic, and type of activity that has to be done.
+
+A list in R allows you to gather a variety of objects under one name (that is, the name of the list) in an ordered way. These objects can be matrices, vectors, data frames, even other lists, etc. It is not even required that these objects are related to each other in any way.
+
+You could say that a list is some kind super data type: you can store practically any piece of information in it!
+
+To construct a list you use the function `list()`:
+```{r}
+my_vec = 1:9
+
+my_matrix = matrix(1:12, byrow=T, nrow=6)
+
+my_df = planets_df
+
+my_list = list(my_vec, my_matrix, "planet"=my_df)
+
+print(my_list)
+
+```
+
+To grab the first component of the list: ` my_list[[ 1 ]] `
+
+If the componets have names, you can also refer to the names of the components, with `[[ ]]` or with the `$` sign. 
+```{r}
+print(my_list[[ 3 ]])
+print(my_list[["planet"]])
+print(my_list$planet)
+```
+
+Questions: how to get the second value of the first component for the list `my_list`
+```{r}
+print( my_list[[1]] [2] )
+```
+
+## Loops in R
+
+`for` loop
+```{r}
+for (num in 1:10){
+  print(num)
+}
+```
+
+`while` loop: while{true}{do this}
+```{r}
+i = 1
+while(i<=10){
+  print(i)
+  i = i+1
+}
+
+```
+
+## Logic control
+|if|if...else|if...else if...else|
+|----|----|----|
+|if (condition is true) {action}|if (condition is true) {action1}else{action2}|if (condition is true) {paction1}else if(condition is true){action2}else{action3}|
+
+
+```{r}
+score=93
+
+# if
+if (score > 90){
+  print("A")
+}
+
+# if ... else
+if (score >= 60){
+  print("Pass")
+}else {
+  print("Fail")
+}
+
+
+```
+
+```{r}
+# if ... else if ... else
+
+score = 65
+  
+if (score >= 60){
+    if (score >= 90){
+       print ("Grade is A")
+    } else if (score >= 80){
+      print("Grade is B")
+    }else if (score >= 70){
+      print("Grade is C")
+    }
+    else{
+      print("Grade is D")
+    }
+} else{
+    print("Grade is E")
+}
+
+```
+
+## function
+Functions gather a sequence of operations into a whole, preserving it for ongoing use. Functions provide:
+
+* a name we can remember and invoke it by
+* relief from the need to remember the individual operations
+* a defined set of inputs and expected outputs
+* rich connections to the larger programming environment
+
+
+in R, we define a function using `function`
+```{r}
+# define a function to output the grade based in the score provided
+
+score_to_grade = function(score){
+   grade = ""
+   if (score >= 60){
+      if (score >= 90){
+         grade = "A"
+      } else if (score>=80){
+        grade = "B"
+      }else if (score >= 70){
+        grade = "C"
+      }
+      else{
+        grade="D"
+      }
+  } else{
+      grade = "E"
+  }
+  return(grade)
+}
+
+print(score_to_grade(67))
+print(score_to_grade(89))
+print(score_to_grade(96))
+print(score_to_grade(55))
+
+```
+
+As the basic building block of most programming languages, user-defined functions constitute “programming” as much as any single abstraction can. 
+If you have written a function, you are a computer programmer.
+
+
+## Visualization
+
+There are three main plotting systems in R, the `base plotting system`, the `lattice` package, and the `ggplot2` package.
+
+Today we’ll be learning about the `ggplot2` package, because it is the most effective for creating publication quality graphics.
+
+`ggplot2` is built on the grammar of graphics, the idea that any plot can be expressed from the same set of components: a `data set`, a `coordinate system`, and a set of `geoms`–the visual representation of data points.
+
+The key to understanding ggplot2 is thinking about a figure in layers. This idea may be familiar to you if you have used image editing programs like Photoshop, Illustrator, or Inkscape.
+
+```{r}
+library(ggplot2)
+library(gapminder)
+str(gapminder)
+```
+
+Does GDP affect the life expectancy?
+```{r}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) +
+  geom_point()
+```
+
+So the first thing we do is call the `ggplot` function. This function lets R know that we’re creating a new plot, and any of the arguments we give the `ggplot` function are the global options for the plot: they apply to all layers on the plot.
+
+We’ve passed in two arguments to `ggplot`. First, we tell ggplot what data we want to show on our figure, in this example the `gapminder` data we read in earlier. For the second argument, we passed in the `aes` function, which tells ggplot how variables in the data map to aesthetic properties of the figure, in this case the `x` and `y` locations. Here we told ggplot we want to plot the “gdpPercap” column of the gapminder data frame on the x-axis, and the “lifeExp” column on the y-axis. Notice that we didn’t need to explicitly pass `aes` these columns (e.g. `x = gapminder[, "gdpPercap"]`), this is because ggplot is smart enough to know to look in the data for that column!
+
+By itself, the call to ggplot isn’t enough to draw a figure:
+```{r}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp))
+```
+
+We need to tell `ggplot` how we want to visually represent the data, which we do by adding a new geom layer. In our example, we used `geom_point`, which tells `ggplot` we want to visually represent the relationship between `x` and `y` as a scatterplot of points:
+
+```{r}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + geom_point()
+```
+
+
+All ggplot2 plots begin with a call to `ggplot()`, supplying default `data` and aesthethic mappings, specified by `aes()`. You then add layers, scales, coords and facets with `+`. To save a plot to disk, use `ggsave()`.
+
+```{r}
+# save a plot
+
+p = ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + geom_point()
+
+ggsave("plot1.pdf", p, device = "pdf")
+
+```
+
+
+
+More examples of `ggplot2`:
+
+Make boxplot to show `lifeExp` of each continents
+```{r}
+ggplot(gapminder, aes(x = continent, y = lifeExp)) + geom_boxplot()
+```
+
+Another way to show the data
+```{r}
+ggplot(gapminder) + geom_histogram(aes(lifeExp, fill=continent), bins=50, color="white", alpha=0.7)
+```
+
+
+
+```{r}
+ggplot(gapminder) + geom_density(aes(lifeExp, fill=continent), alpha=0.7)
+```
+
+
+## Read data into R
+
+fucntions: `read.table`, `read.csv`
+
+we have a file in `/scratch/R_intro/iris.data`
+
+```{r}
+file = "iris.data"
+
+iris_df = read.csv(file, header=F)
+
+str(iris_df)
+
+head(iris_df)
+
+colnames(iris_df) = c("sepal_length", "sepal_width", "petal_length", "petal_width", "species")
+
+head(iris_df)
+
+```
+
+```{r}
+ggplot(iris_df, aes(x=sepal_length, y=sepal_width, color=species) ) + geom_point()
+```
+
+```{r}
+ggplot(iris_df, aes(x=petal_length, y=petal_width, color=species) ) + geom_point()
+```
+
+Generate scatter plots for all pairs
+
+```{r}
+pairs(iris_df[,1:4], col=c("red","slateblue","cyan")[unclass(iris_df$species)],  oma=c(4,4,4, 15))
+par(xpd=TRUE)
+legend(0.8, 0.8, as.vector(unique(iris_df$species)), c("red","slateblue","cyan"))
+
+```
+
+## R packages for data science
+The `tidyverse` is an opinionated collection of R packages designed for data science.[https://www.tidyverse.org/](https://www.tidyverse.org/)
+
+Install the complete tidyverse with: `install.packages("tidyverse")`
+
+```{r}
+
+```
+
+
+
+
