@@ -519,8 +519,6 @@ ggplot(gapminder) + geom_density(aes(lifeExp, fill=continent), alpha=0.7)
 
 fucntions: `read.table`, `read.csv`
 
-we have a file in `/scratch/R_intro/iris.data`
-
 ```{r}
 file = "iris.data"
 
