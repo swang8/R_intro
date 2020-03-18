@@ -1,16 +1,9 @@
 ---
 title: "Introduction to R"
-author: "Dr. Shichen Wang, TAMU"
-output:
-  html_document:
-    df_print: paged
+output: html_notebook
+author: Dr. Shichen Wang, TAMU
 ---
 <hr>
-Install required packages:
-```{r}
-if("ggplot2" %in% rownames(installed.packages()) == FALSE){install.packages("ggplot2")}
-if("gapminder" %in% rownames(installed.packages()) == FALSE){install.packages("gapminder")}
-```
 ##  Basic calculation
 Addition: `+`
 
@@ -455,6 +448,14 @@ Today we’ll be learning about the `ggplot2` package, because it is the most ef
 
 The key to understanding ggplot2 is thinking about a figure in layers. This idea may be familiar to you if you have used image editing programs like Photoshop, Illustrator, or Inkscape.
 
+### install packages
+```{r}
+if("ggplot2" %in% rownames(installed.packages()) == FALSE){install.packages("ggplot2")}
+if("gapminder" %in% rownames(installed.packages()) == FALSE){install.packages("gapminder")}
+```
+
+
+### load the packages
 ```{r}
 library(ggplot2)
 library(gapminder)
@@ -518,6 +519,22 @@ ggplot(gapminder) + geom_density(aes(lifeExp, fill=continent), alpha=0.7)
 ## Read data into R
 
 fucntions: `read.table`, `read.csv`
+
+Before read in files, check what we have in the working directory:
+```{r}
+getwd()
+```
+
+
+```{r}
+dir()
+```
+
+
+if you don't see the **iris.data** in your working directory, you may change the working directory: `setwd("/path/to/R_intro")`
+
+They try the `dir()` again.
+
 
 ```{r}
 file = "iris.data"
